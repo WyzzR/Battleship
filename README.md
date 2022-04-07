@@ -1,3 +1,1 @@
-# battleship
-
-Battleship game using CLI
+# battleship game using CLI
