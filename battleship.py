@@ -52,7 +52,7 @@ def get_location():
 # player a adds ships to the grid with the coordinates from get_location()
 def add_ships():
     global grid_p1, grid_p2, played
-    ships = 0
+    ships = 0  # where ships is a row of "ship" on the grid
 
     # checks whos turn it is
     if played:
@@ -70,17 +70,44 @@ def add_ships():
         for i in coord:
             if grid[i[0]][i[1]] != " ":
                 available = False
+                message = "Unvailable space. A ship is already there."
 
+        # checks if coords are in a straigth line
+        if available:
+            if coord[0][0] == coord[1][0]:
+                for i in range(1, len(coord) - 1):
+                    if coord[i][0] != coord[i + 1][0]:
+                        available = False
+                        message = "The coordinates entered must be in a straight line."
+            elif coord[0][1] == coord[1][1]:
+                for i in range(1, len(coord) - 1):
+                    if coord[i][1] != coord[i + 1][1]:
+                        available = False
+                        message = "The coordinates entered must be in a straight line."
+            else:
+                available = False
+                message = "The coordinates entered must be in a straight line."
+
+        # checks if coords are next to each other
+        if available:
+            for i in range(len(coord) - 1):
+                sum_1 = coord[i][0] + coord[i][1]
+                sum_2 = coord[i + 1][0] + coord[i + 1][1]
+                if sum_1 + 1 != sum_2:
+                    available = False
+                    message = "Some of the coordinates entered are not next to each other. You have to enter them in order."
+
+        # puts ships in the coords provided
         if available:
             for i in coord:
                 grid[i[0]][i[1]] = "ship"
             print(
-                f"--------------------- Player {player}'s grid ----------------------"
+                f"-------------------------- Player {player}'s grid ---------------------------"
             )
             show_grid(grid)
             ships += 1
         else:
-            print("Unavailable space. A ship is already there")
+            print(message)
 
 
 # asks each player to place their ships
@@ -130,7 +157,7 @@ def attack():
             grid[coord[0]][coord[1]] = "hit"
             not_attacked = False
         elif grid[coord[0]][coord[1]] == "hit" or grid[coord[0]][coord[1]] == "miss":
-            print("You have already bombed there. Try again.")
+            print("You have already tried there. Try again.")
         else:
             grid[coord[0]][coord[1]] = "miss"
             not_attacked = False
@@ -176,33 +203,34 @@ def main():
     global grid_p1, grid_p2, played
     not_finished = True
 
-    # for testing
-    # start()
-    played = True
-    grid_p1 = [
-        [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-        [" ", "ship", "ship", "ship", "ship", "ship", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", " ", "ship", "ship", "ship", " "],
-        [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-        [" ", "ship", " ", " ", " ", " ", " ", " ", " ", " "],
-        [" ", "ship", " ", " ", " ", " ", "ship", "ship", "ship", "ship"],
-        [" ", "ship", " ", " ", " ", " ", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", " ", " ", "ship", "ship", " "],
-    ]
-    grid_p2 = [
-        [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-        [" ", "ship", "ship", "ship", "ship", "ship", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", " ", "ship", "ship", "ship", " "],
-        [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-        [" ", "ship", " ", " ", " ", " ", " ", " ", " ", " "],
-        [" ", "ship", " ", " ", " ", " ", "ship", "ship", "ship", "ship"],
-        [" ", "ship", " ", " ", " ", " ", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", " ", " ", "ship", "ship", " "],
-    ]
+    start()
+
+    # # for testing
+    # played = True
+    # grid_p1 = [
+    #     [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+    #     [" ", "ship", "ship", "ship", "ship", "ship", " ", " ", " ", " "],
+    #     [" ", " ", " ", " ", " ", " ", "ship", "ship", "ship", " "],
+    #     [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+    #     [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+    #     [" ", "ship", " ", " ", " ", " ", " ", " ", " ", " "],
+    #     [" ", "ship", " ", " ", " ", " ", "ship", "ship", "ship", "ship"],
+    #     [" ", "ship", " ", " ", " ", " ", " ", " ", " ", " "],
+    #     [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+    #     [" ", " ", " ", " ", " ", " ", " ", "ship", "ship", " "],
+    # ]
+    # grid_p2 = [
+    #     [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+    #     [" ", "ship", "ship", "ship", "ship", "ship", " ", " ", " ", " "],
+    #     [" ", " ", " ", " ", " ", " ", "ship", "ship", "ship", " "],
+    #     [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+    #     [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+    #     [" ", "ship", " ", " ", " ", " ", " ", " ", " ", " "],
+    #     [" ", "ship", " ", " ", " ", " ", "ship", "ship", "ship", "ship"],
+    #     [" ", "ship", " ", " ", " ", " ", " ", " ", " ", " "],
+    #     [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
+    #     [" ", " ", " ", " ", " ", " ", " ", "ship", "ship", " "],
+    # ]
 
     while not_finished:
         attack()
